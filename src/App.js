@@ -1,33 +1,57 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import './App.css'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import Homepage from './pages/homepage/homepage.component'
 import ShopPage from './pages/shop/shop.component'
 import Header from './components/header/header.component'
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component'
-import { auth } from './firebase/firebase.utils'
+import { auth, createUserProfileDocument } from './firebase/firebase.utils'
+import CurrentUserContext from './context/current-user/current-user.context'
+import CartProvider from './context/cartProvider/cart.provider'
 
 function App() {
-  const [user, setUser] = useState(null)
+  const [currentUser, setCurrentUser] = useState({ currentUser: null })
 
   useEffect(() => {
-    //checks when mounting if someone is signed in
-    auth.onAuthStateChanged((user) => {
-      setUser(user)
-      console.log('USER is', user)
+    let unsub
+    //checks when mounting if someone is signed in and setCurrentUser to current signed in user
+    unsub = auth.onAuthStateChanged(async (userAuth) => {
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth)
+
+        userRef.onSnapshot((snapShot) => {
+          setCurrentUser({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data(),
+            },
+          })
+        })
+      }
+      setCurrentUser({ currentUser: userAuth })
     })
+
+    return () => {
+      //unsubscribing
+      unsub()
+    }
   }, [])
 
   return (
     <BrowserRouter>
       <div className="App">
-        {user ? 'logged in' : 'not logged in'}
-        <Header user={user} />
-        <Switch>
-          <Route exact path="/" component={Homepage} />
-          <Route path="/shop" component={ShopPage} />
-          <Route path="/signin" component={SignInAndSignUpPage} />
-        </Switch>
+        <CartProvider>
+          <CurrentUserContext.Provider value={currentUser}>
+            <Header />
+          </CurrentUserContext.Provider>
+          <Switch>
+            <Route exact path="/" component={Homepage} />
+            <Route path="/shop" component={ShopPage} />
+            <Route exact path="/signin">
+              {currentUser.currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />}
+            </Route>
+          </Switch>
+        </CartProvider>
       </div>
     </BrowserRouter>
   )

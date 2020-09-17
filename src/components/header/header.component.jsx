@@ -1,10 +1,16 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import './header.styles.scss'
 import { Link } from 'react-router-dom'
-import firebase, { auth } from '../../firebase/firebase.utils'
-import { withRouter } from 'react-router-dom'
+import { auth } from '../../firebase/firebase.utils'
+import CurrentUserContext from '../../context/current-user/current-user.context'
+import { CartContext } from '../../context/cartProvider/cart.provider'
 
-const Header = ({ user, history }) => {
+import CartIcon from '../cart-icon/cart-icon.component'
+import CartDropdown from '../cart-dropdown/cart-dropdown.component'
+
+const Header = () => {
+  const currentUser = useContext(CurrentUserContext)
+  const { hidden } = useContext(CartContext)
   return (
     <nav className="header">
       <div className="header__logo">
@@ -12,6 +18,7 @@ const Header = ({ user, history }) => {
           <img src="Logo.png" alt="Logo" />
         </Link>
       </div>
+
       <ul className="header__nav">
         <li className="header__link">
           <Link to="/">Home</Link>
@@ -19,13 +26,21 @@ const Header = ({ user, history }) => {
         <li className="header__link">
           <Link to="/shop">Shop</Link>
         </li>
-        {!user ? (
+        {!currentUser.currentUser ? (
           <li className="header__link">
             <Link to="/signin">Sign In</Link>
           </li>
         ) : (
           <li className="header__link">
-            <Link to="/signout">Sign Out</Link>
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault()
+                auth.signOut()
+              }}
+            >
+              Sign Out
+            </a>
           </li>
         )}
         <li className="header__link">
@@ -33,11 +48,13 @@ const Header = ({ user, history }) => {
         </li>
       </ul>
       <ul className="header__icons">
-        <li className="header__icon">Fb</li>
-        <li className="header__search">🔍</li>
+        <li>
+          <CartIcon />
+        </li>
       </ul>
+      {hidden ? null : <CartDropdown />}
     </nav>
   )
 }
 
-export default withRouter(Header)
+export default Header

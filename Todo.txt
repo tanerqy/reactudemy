@@ -1,0 +1,3 @@
+[] Get the collection page working
+[] cart icon Counter with reduce() and context
+[] 
