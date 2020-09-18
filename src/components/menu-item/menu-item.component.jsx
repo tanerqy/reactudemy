@@ -6,7 +6,7 @@ const MenuItem = ({ title, imageUrl, size, history, match }) => (
   <div
     className={`${size} menu-item`}
     //NOTE wegen withRouter haben wir hier zugriff auf history und match props, ohne ppropdrilling
-    onClick={() => history.push(`${match.url}${title.toLowerCase()}`)}
+    onClick={() => history.push(`${match.url}collection/${title.toLowerCase()}`)}
   >
     <div
       className="background-image"

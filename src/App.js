@@ -3,6 +3,7 @@ import './App.css'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import Homepage from './pages/homepage/homepage.component'
 import ShopPage from './pages/shop/shop.component'
+import CollectionPage from './pages/collection/collection.component'
 import Header from './components/header/header.component'
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component'
 import { auth, createUserProfileDocument } from './firebase/firebase.utils'
@@ -47,6 +48,7 @@ function App() {
           <Switch>
             <Route exact path="/" component={Homepage} />
             <Route path="/shop" component={ShopPage} />
+            <Route path="/collection/:collectionID" component={CollectionPage} />
             <Route exact path="/signin">
               {currentUser.currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />}
             </Route>

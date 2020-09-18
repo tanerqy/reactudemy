@@ -1,26 +1,26 @@
-import React, { useContext } from 'react';
+import React, { useContext } from 'react'
 
-import CollectionItem from '../../components/collection-item/collection-item.component';
+import CollectionItem from '../../components/collection-item/collection-item.component'
 
-import CollectionsContext from '../../contexts/collections/collections.context';
+import CollectionsContext from '../../context/collection/collection.context'
 
-import './collection.styles.scss';
+import './collection.styles.scss'
 
 const CollectionPage = ({ match }) => {
-  const collections = useContext(CollectionsContext);
-  const collection = collections[match.params.collectionId];
-  const { title, items } = collection;
+  const collections = useContext(CollectionsContext)
+  const collection = collections.find((col) => col.routeName === match.params.collectionID)
+  const { title, items } = collection
 
   return (
-    <div className='collection-page'>
-      <h2 className='title'>{title}</h2>
-      <div className='items'>
-        {items.map(item => (
-          <CollectionItem key={item.id} item={item} />
+    <div className="collection-page">
+      <h2 className="title">{title}</h2>
+      <div className="items">
+        {items.map((item) => (
+          <CollectionItem key={item.id} {...item} />
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CollectionPage;
+export default CollectionPage
