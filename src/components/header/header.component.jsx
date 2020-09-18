@@ -8,6 +8,8 @@ import { CartContext } from '../../context/cartProvider/cart.provider'
 import CartIcon from '../cart-icon/cart-icon.component'
 import CartDropdown from '../cart-dropdown/cart-dropdown.component'
 
+import logo from '../../assets/Logo.png'
+
 const Header = () => {
   const currentUser = useContext(CurrentUserContext)
   const { hidden } = useContext(CartContext)
@@ -15,7 +17,7 @@ const Header = () => {
     <nav className="header">
       <div className="header__logo">
         <Link to="/">
-          <img src="Logo.png" alt="Logo" />
+          <img src={logo} alt="Logo" />
         </Link>
       </div>
 

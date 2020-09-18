@@ -10,7 +10,9 @@ function Homepage() {
         <div className="hero__content">
           <h1>Modern Day Fashion</h1>
           <h3>A way to express yourself</h3>
-          <button className="hero__button">Browse Fall Collection</button>
+          <Link to="/shop" className="hero__button">
+            Browse Fall Collection 2020
+          </Link>
         </div>
 
         <div className="hero__image">

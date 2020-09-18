@@ -31,21 +31,44 @@ export const CartContext = createContext({
   toggleHidden: () => {},
   cartItems: [],
   addItem: () => {},
+  cartCount: 0,
 })
 
 const CartProvider = ({ children }) => {
   //State
   const [hidden, setHidden] = useState(true)
   const [cartItems, setCartItems] = useState([])
+  const [cartCount, setCartCount] = useState(0)
 
   //Functions that change state
   const toggleHidden = () => setHidden(!hidden)
   const addItem = (item) => {
     setCartItems(addItemToCart(cartItems, item))
+    console.log(
+      `%c ## Added an Item to the Cart ##`,
+      'background: purple; color: white; display: block;'
+    )
   }
 
+  //useEffect updates on the Context
+
+  useEffect(() => {
+    //update CartItemCount
+    setCartCount(
+      cartItems.reduce((count, currentAmount) => {
+        return count + currentAmount.quantity * 1
+      }, 0)
+    )
+    console.log(
+      `%c ## Counted Cart Items to be ${cartCount} ##`,
+      'background: chocolate; color: white; display: block;'
+    )
+
+    //update CartTotal
+  }, [cartItems])
+
   return (
-    <CartContext.Provider value={{ hidden, toggleHidden, cartItems, addItem }}>
+    <CartContext.Provider value={{ hidden, toggleHidden, cartItems, addItem, cartCount }}>
       {children}
     </CartContext.Provider>
   )
