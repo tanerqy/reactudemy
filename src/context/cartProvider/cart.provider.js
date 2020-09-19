@@ -19,6 +19,23 @@ const addItemToCart = (cart, item) => {
 
   return [...cart, { item, quantity: 1 }]
 }
+const removeItemFromCart = (cart, item) => {
+  const existingCartItem = cart.find(({ item: cartitem }) => cartitem.name === item.name)
+
+  if (!existingCartItem) return
+  if (existingCartItem.quantity * 1 > 1) {
+    return cart.map((cartitem) =>
+      cartitem.item.name === item.name
+        ? { ...cartitem, quantity: cartitem.quantity * 1 - 1 }
+        : cartitem
+    )
+  }
+  if (existingCartItem.quantity * 1 === 1) {
+    return cart.filter((cartitem) => cartitem.item.name !== item.name)
+  }
+
+  return cart
+}
 
 // .#####...#####....####...##..##..######..#####...######..#####..
 // .##..##..##..##..##..##..##..##....##....##..##..##......##..##.
@@ -31,7 +48,10 @@ export const CartContext = createContext({
   toggleHidden: () => {},
   cartItems: [],
   addItem: () => {},
+  removeItem: () => {},
   cartCount: 0,
+  total: 0,
+  clearItemFromCart: () => {},
 })
 
 const CartProvider = ({ children }) => {
@@ -39,6 +59,7 @@ const CartProvider = ({ children }) => {
   const [hidden, setHidden] = useState(true)
   const [cartItems, setCartItems] = useState([])
   const [cartCount, setCartCount] = useState(0)
+  const [total, setTotal] = useState(0)
 
   //Functions that change state
   const toggleHidden = () => setHidden(!hidden)
@@ -49,9 +70,17 @@ const CartProvider = ({ children }) => {
       'background: purple; color: white; display: block;'
     )
   }
-
+  const removeItem = (item) => {
+    setCartItems(removeItemFromCart(cartItems, item))
+    console.log(
+      `%c ## Added an Item to the Cart ##`,
+      'background: purple; color: white; display: block;'
+    )
+  }
+  const clearItemFromCart = (item) => {
+    setCartItems(cartItems.filter((cartitem) => cartitem.item.name !== item.name))
+  }
   //useEffect updates on the Context
-
   useEffect(() => {
     //update CartItemCount
     setCartCount(
@@ -63,12 +92,41 @@ const CartProvider = ({ children }) => {
       `%c ## Counted Cart Items to be ${cartCount} ##`,
       'background: chocolate; color: white; display: block;'
     )
-
-    //update CartTotal
+    //TODO update after adding not before, ein schritt zurück
+    setTotal(
+      cartItems.reduce((total, current) => {
+        return total + current.item.price * current.quantity
+      }, 0)
+    )
+    console.log(total)
   }, [cartItems])
 
+  // useEffect(() => {
+  //   console.log('CALCULATING')
+  //   //update CartTotal
+  //   if (cartItems.length) {
+  //     setTotal(
+  //       cartItems.reduce((total, current) => {
+  //         return total + current.item.price * current.quantity
+  //       }, 0)
+  //     )
+  //   }
+  //   console.log(total)
+  // })
+
   return (
-    <CartContext.Provider value={{ hidden, toggleHidden, cartItems, addItem, cartCount }}>
+    <CartContext.Provider
+      value={{
+        hidden,
+        toggleHidden,
+        cartItems,
+        addItem,
+        removeItem,
+        cartCount,
+        total,
+        clearItemFromCart,
+      }}
+    >
       {children}
     </CartContext.Provider>
   )
