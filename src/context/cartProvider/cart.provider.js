@@ -30,13 +30,19 @@ const removeItemFromCart = (cart, item) => {
         : cartitem
     )
   }
+  if (existingCartItem.quantity * 1 === 1 && cart.length === 1) {
+    console.log('REMOVING LAST ITEM')
+    return false
+  }
   if (existingCartItem.quantity * 1 === 1) {
-    console.log(cart.filter((cartitem) => cartitem.item.name !== item.name))
     return cart.filter((cartitem) => cartitem.item.name !== item.name)
   }
 
   return cart
 }
+
+export const filterItemFromCart = (cartItems, item) =>
+  cartItems.filter((cartItem) => cartItem.id !== item.id)
 
 // .#####...#####....####...##..##..######..#####...######..#####..
 // .##..##..##..##..##..##..##..##....##....##..##..##......##..##.
@@ -79,6 +85,10 @@ const CartProvider = ({ children }) => {
     )
   }
   const clearItemFromCart = (item) => {
+    if (cartItems.length === 1) {
+      console.log('LAST ONE DELETING')
+      setCartItems([])
+    }
     setCartItems(cartItems.filter((cartitem) => cartitem.item.name !== item.name))
   }
   //useEffect updates on the Context
@@ -97,26 +107,11 @@ const CartProvider = ({ children }) => {
 
   useEffect(() => {
     if (cartItems.length) {
-      console.log('SAVING NOW TO LOCALSTOORAGE')
       localStorage.setItem('cartItems', JSON.stringify(cartItems))
     } else if (localStorage.getItem('cartItems') && !cartItems.length) {
       setCartItems(JSON.parse(localStorage.getItem('cartItems')))
-      console.log('FOUND SOME, LOADING LOCALSTORAGE ')
     }
   })
-
-  // useEffect(() => {
-  //   console.log('CALCULATING')
-  //   //update CartTotal
-  //   if (cartItems.length) {
-  //     setTotal(
-  //       cartItems.reduce((total, current) => {
-  //         return total + current.item.price * current.quantity
-  //       }, 0)
-  //     )
-  //   }
-  //   console.log(total)
-  // })
 
   return (
     <CartContext.Provider

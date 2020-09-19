@@ -25,11 +25,11 @@ const CheckoutPage = () => {
           <span>Remove</span>
         </div>
       </div>
-
-      {cartItems.map((cartItem) => (
-        <CheckoutItem key={cartItem.id} {...cartItem} />
-      ))}
-      <h1>{JSON.stringify(total)}</h1>
+      {console.log(cartItems)}
+      {!cartItems
+        ? 'NOTHING HERE'
+        : cartItems.map((cartItem) => <CheckoutItem key={cartItem.id} {...cartItem} />)}
+      <h1>Total: {total}</h1>
     </div>
   )
 }
