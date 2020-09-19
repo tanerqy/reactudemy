@@ -29,7 +29,7 @@ const CheckoutPage = () => {
       {console.log(cartItems)}
       {!cartItems
         ? 'NOTHING HERE'
-        : cartItems.map((cartItem) => <CheckoutItem key={cartItem.id} {...cartItem} />)}
+        : cartItems.map((cartItem) => <CheckoutItem key={cartItem.item.id} {...cartItem} />)}
       <div className="total">Total: {total}€</div>
       <StripeCheckoutButton price={total} />
     </div>
