@@ -3,6 +3,7 @@ import SHOP_DATA from './shoppingdata'
 import './shop.styles.scss'
 import { Link } from 'react-router-dom'
 import CollectionPreview from '../../components/collection/collection.component'
+import image from '../../assets/hero1.jpg'
 
 export default class ShopPage extends Component {
   constructor(props) {
@@ -17,7 +18,9 @@ export default class ShopPage extends Component {
     const { collections } = this.state
     return (
       <div className="shop-page">
-        <h1>Collections</h1>
+        <div style={{ backgroundImage: `url(${image})` }} className="shop-page__hero">
+          <h1>Shop</h1>
+        </div>
         {collections.map(({ id, ...otherProps }) => (
           <CollectionPreview key={id} {...otherProps} />
         ))}

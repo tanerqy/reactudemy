@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import './checkout.styles.scss'
 import { CartContext } from '../../context/cartProvider/cart.provider'
 import CheckoutItem from '../../components/checkout-item/checkout-item.component'
+import StripeCheckoutButton from '../../components/stripe-button/stripe-button.component'
 
 const CheckoutPage = () => {
   const { cartItems, total } = useContext(CartContext)
@@ -29,7 +30,8 @@ const CheckoutPage = () => {
       {!cartItems
         ? 'NOTHING HERE'
         : cartItems.map((cartItem) => <CheckoutItem key={cartItem.id} {...cartItem} />)}
-      <h1>Total: {total}</h1>
+      <div className="total">Total: {total}€</div>
+      <StripeCheckoutButton price={total} />
     </div>
   )
 }

@@ -4,6 +4,7 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import Homepage from './pages/homepage/homepage.component'
 import ShopPage from './pages/shop/shop.component'
 import CollectionPage from './pages/collection/collection.component'
+import CollectionsPage from './pages/collections/collections.component'
 import CheckoutPage from './pages/checkout/checkout.component'
 import Header from './components/header/header.component'
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component'
@@ -58,6 +59,7 @@ function App() {
             <Route exact path="/" component={Homepage} />
             <Route path="/shop" component={ShopPage} />
             <Route exact path="/checkout" component={CheckoutPage} />
+            <Route exact path="/collections/" component={CollectionsPage} />
             <Route path="/collection/:collectionID" component={CollectionPage} />
             <Route exact path="/signin">
               {currentUser.currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />}
