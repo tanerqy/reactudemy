@@ -31,6 +31,7 @@ const removeItemFromCart = (cart, item) => {
     )
   }
   if (existingCartItem.quantity * 1 === 1) {
+    console.log(cart.filter((cartitem) => cartitem.item.name !== item.name))
     return cart.filter((cartitem) => cartitem.item.name !== item.name)
   }
 
@@ -82,24 +83,27 @@ const CartProvider = ({ children }) => {
   }
   //useEffect updates on the Context
   useEffect(() => {
-    //update CartItemCount
     setCartCount(
       cartItems.reduce((count, currentAmount) => {
         return count + currentAmount.quantity * 1
       }, 0)
     )
-    console.log(
-      `%c ## Counted Cart Items to be ${cartCount} ##`,
-      'background: chocolate; color: white; display: block;'
-    )
-    //TODO update after adding not before, ein schritt zurück
     setTotal(
       cartItems.reduce((total, current) => {
         return total + current.item.price * current.quantity
       }, 0)
     )
-    console.log(total)
   }, [cartItems])
+
+  useEffect(() => {
+    if (cartItems.length) {
+      console.log('SAVING NOW TO LOCALSTOORAGE')
+      localStorage.setItem('cartItems', JSON.stringify(cartItems))
+    } else if (localStorage.getItem('cartItems') && !cartItems.length) {
+      setCartItems(JSON.parse(localStorage.getItem('cartItems')))
+      console.log('FOUND SOME, LOADING LOCALSTORAGE ')
+    }
+  })
 
   // useEffect(() => {
   //   console.log('CALCULATING')
