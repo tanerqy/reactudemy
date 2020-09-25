@@ -11,9 +11,17 @@ import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up
 import { auth, createUserProfileDocument } from './firebase/firebase.utils'
 import CurrentUserContext from './context/current-user/current-user.context'
 import CartProvider from './context/cartProvider/cart.provider'
+import CollectionContext from './context/collection/collection.context'
+import { updateCollections } from './firebase/firebase.utils.js'
 
 function App() {
   const [currentUser, setCurrentUser] = useState({ currentUser: null })
+
+  const [collections, setCollections] = useState({})
+
+  useEffect(() => {
+    updateCollections(setCollections)
+  }, [])
 
   useEffect(() => {
     console.log(
@@ -52,19 +60,21 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <CartProvider>
-          <CurrentUserContext.Provider value={currentUser}>
-            <Header />
-          </CurrentUserContext.Provider>
-          <Switch>
-            <Route exact path="/" component={Homepage} />
-            <Route path="/shop" component={ShopPage} />
-            <Route exact path="/checkout" component={CheckoutPage} />
-            <Route exact path="/collections/" component={CollectionsPage} />
-            <Route path="/collection/:collectionID" component={CollectionPage} />
-            <Route exact path="/signin">
-              {currentUser.currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />}
-            </Route>
-          </Switch>
+          <CollectionContext.Provider value={(collections, updateCollections)}>
+            <CurrentUserContext.Provider value={currentUser}>
+              <Header />
+            </CurrentUserContext.Provider>
+            <Switch>
+              <Route exact path="/" component={Homepage} />
+              <Route path="/shop" component={ShopPage} />
+              <Route exact path="/checkout" component={CheckoutPage} />
+              <Route exact path="/collections/" component={CollectionsPage} />
+              <Route path="/collection/:collectionID" component={CollectionPage} />
+              <Route exact path="/signin">
+                {currentUser.currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />}
+              </Route>
+            </Switch>
+          </CollectionContext.Provider>
         </CartProvider>
       </div>
     </BrowserRouter>

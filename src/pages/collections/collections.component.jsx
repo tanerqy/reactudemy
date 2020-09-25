@@ -7,7 +7,7 @@ import CollectionsContext from '../../context/collection/collection.context'
 import './collections.styles.scss'
 
 const CollectionsPage = ({ match }) => {
-  const collections = useContext(CollectionsContext)
+  const { collections } = useContext(CollectionsContext)
   const collection = collections.find((col) => col.routeName === match.params.collectionID)
   const { title, items } = collection
 

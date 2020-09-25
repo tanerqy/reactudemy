@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
+import SHOP_DATA from '../context/collection/shoppingdata'
 
 const config = {
   apiKey: 'AIzaSyCQIAOUOtTdu6uRkaj73trlHs87NPaFmjg',
@@ -45,3 +46,20 @@ provider.setCustomParameters({ prompt: 'select_account' })
 export const signInWithGoogle = () => auth.signInWithPopup(provider)
 
 export default firebase
+
+export const updateCollections = (setCollections) => {
+  const collectionRef = firestore.collection('collections').get()
+  let data = {}
+  collectionRef
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        // console.log(doc.id, ' => ', doc.data())
+        // console.log(doc.id)
+        data[doc.data().title.toLowerCase()] = doc.data()
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  setCollections(data)
+}

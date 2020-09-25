@@ -1,6 +1,8 @@
-import React, { createContext } from 'react'
-import SHOP_DATA from './shoppingdata'
+import { createContext } from 'react'
 
-const shopData = createContext(SHOP_DATA)
+const shopData = createContext({
+  collections: {},
+  updateCollection: () => {},
+})
 
 export default shopData
